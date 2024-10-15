@@ -1,9 +1,25 @@
+using System.Text;
 using api.Models;
 using api.Services;
+using Microsoft.IdentityModel.Tokens;
 using Supabase;
 var builder = WebApplication.CreateBuilder(args);
  
+
+
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddAuthorization();
+
+var bytes = Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JwtSecret"]!);
+
+builder.Services.AddAuthentication().AddJwtBearer(options =>{
+    options.TokenValidationParameters = new TokenValidationParameters{
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey =  new SymmetricSecurityKey(bytes),
+        ValidAudience =  builder.Configuration["Authentication:ValidAudience"],
+        ValidIssuer =builder.Configuration["Authentication:ValidIssuer"]
+    };
+});
 
 builder.Services.AddCors(options =>
 {
@@ -43,20 +59,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
  
-app.MapGet("/getProduct/{id}", async (int id, Client client) =>
-{
-    var response = await client.From<Product>().Get();
-    var foundProduct = response.Models;
+// app.MapGet("/getProduct/{id}", async (int id, Client client) =>
+// {
+//     var response = await client.From<Product>().Get();
+//     var foundProduct = response.Models;
 
-     Console.WriteLine($"Response: {Newtonsoft.Json.JsonConvert.SerializeObject(response)}");
+//      Console.WriteLine($"Response: {Newtonsoft.Json.JsonConvert.SerializeObject(response)}");
  
-    if (foundProduct is null)
-    {
-        return Results.NotFound($"Product with ID {id} not found., {response}, product {foundProduct}");
-    }
+//     if (foundProduct is null)
+//     {
+//         return Results.NotFound($"Product with ID {id} not found., {response}, product {foundProduct}");
+//     }
 
-    return Results.Ok(Newtonsoft.Json.JsonConvert.SerializeObject(foundProduct));
-});
+//     return Results.Ok(Newtonsoft.Json.JsonConvert.SerializeObject(foundProduct));
+// }).RequireAuthorization();
 
 
  

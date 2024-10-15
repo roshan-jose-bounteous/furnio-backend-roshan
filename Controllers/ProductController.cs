@@ -27,7 +27,6 @@ namespace api.Controllers
             // return Ok(products);
             var serializedProducts = JsonConvert.SerializeObject(products);
             return Ok(serializedProducts);
-    // return Results.Ok(Newtonsoft.Json.JsonConvert.SerializeObject(products));
 
         }
 

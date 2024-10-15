@@ -7,22 +7,7 @@ using Supabase.Postgrest.Models;
 
 namespace api.Models
 {
-    // [Table("products")]
-    // public class Product : BaseModel
-    // {
-    //     [PrimaryKey("id", false)]
-    //     public int Id { get; set; }
- 
-    //     [Column("name")]
-    //     public string Name { get; set; } = string.Empty;
- 
-    //     [Column("price")]
-    //     public decimal Price { get; set; }
-
-
-    //     [Column("created_at")]
-    //     public DateTime CreatedAt { get; set; }
-    // }
+    
      [Table("products")] // Ensure this matches the table name in your Supabase database
     public class Product : BaseModel
     {
